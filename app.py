@@ -1,4 +1,5 @@
 import streamlit as st
+from datetime import date
 
 from constants import (
     APP_TITLE,
@@ -94,16 +95,25 @@ with st.expander(
     )
 
     employment_start_date = st.date_input(
-        "Employment Start Date"
+        "Employment Start Date",
+        value=date.today(),
+        min_value=date(1900, 1, 1),
+        max_value=date(2100, 12, 31)
     )
 
     due_date = st.date_input(
-        "Expected Due Date"
+        "Expected Due Date",
+        value=date.today(),
+        min_value=date(1900, 1, 1),
+        max_value=date(2100, 12, 31)
     )
 
     leave_start = st.date_input(
-        "Maternity Leave Start Date"
-    )
+        "Maternity Leave Start Date",
+        value=date.today(),
+        min_value=date(1900, 1, 1),
+        max_value=date(2100, 12, 31)
+)
 
     pdf_filename = st.text_input(
         "Employee Name for PDF",
