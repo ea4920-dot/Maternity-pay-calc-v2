@@ -10,9 +10,8 @@ from reportlab.platypus import (
 )
 
 from reportlab.lib import colors
-
+from reportlab.lib.pagesizes import A4, landscape
 from reportlab.lib.styles import getSampleStyleSheet
-
 from constants import DATE_FORMAT
 
 def build_table(data):
@@ -48,7 +47,10 @@ def generate_pdf_report(
        
     buffer = BytesIO()
 
-    doc = SimpleDocTemplate(buffer)
+    doc = SimpleDocTemplate(
+        buffer,
+        pagesize=landscape(A4)
+    )
 
     styles = getSampleStyleSheet()
 
@@ -61,7 +63,7 @@ def generate_pdf_report(
         )
     )
 
-    content.append(Spacer(1, 12))
+    content.append(Spacer(1,4))
 
     content.append(
         Paragraph(
@@ -70,7 +72,7 @@ def generate_pdf_report(
         )
     )
 
-    content.append(Spacer(1, 12))
+    content.append(Spacer(1, 4))
 
     content.append(
         Paragraph(
@@ -111,7 +113,7 @@ def generate_pdf_report(
         )
     )
 
-    content.append(Spacer(1, 12))
+    content.append(Spacer(1, 4))
 
     content.append(
         Paragraph(
@@ -140,7 +142,7 @@ def generate_pdf_report(
         )
     )
 
-    content.append(Spacer(1, 12))
+    content.append(Spacer(1, 4))
 
     content.append(
         Paragraph(
@@ -149,7 +151,7 @@ def generate_pdf_report(
         )
     )
 
-    content.append(Spacer(1, 12))
+    content.append(Spacer(1, 4))
 
     content.append(
         Paragraph(
@@ -209,7 +211,7 @@ def generate_pdf_report(
         )
     )
 
-    content.append(Spacer(1, 12))
+    content.append(Spacer(1, 4))
 
     content.append(
         Paragraph(
@@ -257,7 +259,7 @@ def generate_pdf_report(
         )
     )
 
-    content.append(Spacer(1, 12))
+    content.append(Spacer(1, 4))
 
     content.append(
         Paragraph(
