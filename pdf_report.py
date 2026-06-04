@@ -42,7 +42,8 @@ def generate_pdf_report(
     timeline,
     qualifying,
     oxford_eligible,
-    smp_eligible
+    smp_eligible,
+    annual_leave_data
 ):
        
     buffer = BytesIO()
@@ -145,6 +146,43 @@ def generate_pdf_report(
         Paragraph(
             "Pay Summary",
             styles["Heading2"]
+        )
+    )
+
+    content.append(Spacer(1, 12))
+
+    content.append(
+        Paragraph(
+            "Annual Leave Summary",
+            styles["Heading2"]
+        )
+    )
+
+    content.append(
+        build_table(
+            [
+                ["Item", "Value"],
+                [
+                    "Current Leave Balance",
+                    f"{annual_leave_data['current_balance']:,.1f} days"
+                ],
+                [
+                    "Annual Entitlement",
+                    f"{annual_leave_data['annual_entitlement']:,.1f} days"
+                ],
+                [
+                    "Accrued During Maternity Leave",
+                    f"{annual_leave_data['accrued_during_leave']:,.1f} days"
+                ],
+                [
+                    "Accrued Since Leave Year Start",
+                    f"{annual_leave_data['accrued_since_october']:,.1f} days"
+                ],
+                [
+                    "Available On Return",
+                    f"{annual_leave_data['available_on_return']:,.1f} days"
+                ]
+            ]
         )
     )
 

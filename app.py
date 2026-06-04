@@ -199,8 +199,15 @@ if calculate:
         timeline,
         qualifying,
         oxford_eligible,
-        smp_eligible
-    )
+        smp_eligible,
+        annual_leave_data={
+            "current_balance": current_balance_days,
+            "annual_entitlement": actual_entitlement,
+            "accrued_during_leave": accrued_during_leave,
+            "accrued_since_october": available_leave["accrued_since_october"],
+            "available_on_return": available_leave["available_on_return"]
+        }
+)
 
     filename = (
         f"{pdf_filename}_Maternity_Report.pdf"
