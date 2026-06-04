@@ -12,7 +12,9 @@ from calculations import (
     calculate_qualifying_week,
     qualifies_for_smp,
     qualifies_for_oxford_scheme,
-    calculate_maternity_timeline
+    calculate_maternity_timeline,
+    calculate_leave_accrual,
+    calculate_leave_available_on_return
 )
 
 from calendar_view import render_month
@@ -137,15 +139,6 @@ if calculate:
         annual_leave_entitlement * fte
     )
 
-    accrued_during_leave = (
-        actual_entitlement
-    )
-
-    total_leave_days = (
-        current_balance_days +
-        accrued_during_leave
-    )
-
     results = calculate_pay_schedule(
         annual_salary=annual_salary,
         fte=fte
@@ -158,6 +151,29 @@ if calculate:
     return_date = calculate_return_date(
         leave_start
     )
+
+    leave_summary = calculate_leave_accrual(
+    leave_start=leave_start,
+    return_date=return_date,
+    annual_entitlement=actual_entitlement,
+    current_balance_days=current_balance_days
+)
+
+    accrued_during_leave = (
+        leave_summary["accrued_leave"]
+)
+
+    total_leave_days = (
+        leave_summary["total_available"]
+)
+    
+    available_leave = (
+        calculate_leave_available_on_return(
+            return_date=return_date,
+            annual_entitlement=actual_entitlement,
+            current_balance_days=current_balance_days
+    )
+)
 
     timeline = calculate_maternity_timeline(
         leave_start
@@ -298,12 +314,17 @@ if calculate:
             st.write(
                 f"Accrued During Leave: "
                 f"{accrued_during_leave:,.1f} days"
-            )
+)
+
+            st.write(
+                f"Accrued Since Leave Year Start: "
+                f"{available_leave['accrued_since_october']:,.1f} days"
+)
 
             st.metric(
                 "Available On Return",
-                f"{total_leave_days:,.1f} days"
-            )
+                f"{available_leave['available_on_return']:,.1f} days"
+)
 
     st.divider()
 

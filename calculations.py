@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import timedelta, date
 
 from constants import SMP_RATE
 
@@ -92,6 +92,7 @@ def qualifies_for_oxford_scheme(
 def calculate_maternity_timeline(
     leave_start
 ):
+    
     full_pay_end = (
         leave_start +
         timedelta(weeks=26) -
@@ -132,4 +133,90 @@ def calculate_maternity_timeline(
         "unpaid_start": unpaid_start,
         "unpaid_end": unpaid_end,
         "return_date": return_date
+    }
+
+def calculate_leave_accrual(
+    leave_start,
+    return_date,
+    annual_entitlement,
+    current_balance_days
+):
+    """
+    Calculates annual leave accrued during maternity leave.
+
+    Oxford leave year:
+    1 October -> 30 September
+    """
+
+    total_leave_days = (
+        return_date - leave_start
+    ).days
+
+    accrual_rate = (
+        annual_entitlement / 365
+    )
+
+    accrued_leave = round(
+        total_leave_days * accrual_rate,
+        1
+    )
+
+    return {
+        "current_balance": round(
+            current_balance_days,
+            1
+        ),
+        "accrued_leave": accrued_leave,
+        "total_available": round(
+            current_balance_days + accrued_leave,
+            1
+        )
+    }
+
+from datetime import date
+
+
+def calculate_leave_available_on_return(
+    return_date,
+    annual_entitlement,
+    current_balance_days
+):
+    if return_date.month >= 10:
+        leave_year_start = date(
+            return_date.year,
+            10,
+            1
+        )
+    else:
+        leave_year_start = date(
+            return_date.year - 1,
+            10,
+            1
+        )
+
+    days_since_october = (
+        return_date - leave_year_start
+    ).days
+
+    daily_accrual_rate = (
+        annual_entitlement / 365
+    )
+
+    accrued_since_october = round(
+        days_since_october *
+        daily_accrual_rate,
+        1
+    )
+
+    available_on_return = round(
+        current_balance_days +
+        accrued_since_october,
+        1
+    )
+
+    return {
+        "leave_year_start": leave_year_start,
+        "days_since_october": days_since_october,
+        "accrued_since_october": accrued_since_october,
+        "available_on_return": available_on_return
     }
