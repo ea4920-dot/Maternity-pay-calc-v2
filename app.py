@@ -15,7 +15,8 @@ from calculations import (
     qualifies_for_oxford_scheme,
     calculate_maternity_timeline,
     calculate_leave_accrual,
-    calculate_leave_available_on_return
+    calculate_leave_available_on_return,
+    calculate_long_service_days
 )
 
 from calendar_view import render_month
@@ -145,9 +146,17 @@ if calculate:
         else current_leave_balance
     )
 
+    long_service_days = (
+    calculate_long_service_days(
+        employment_start_date,
+        leave_start,
+        fte
+    )
+)
+
     actual_entitlement = (
         annual_leave_entitlement * fte
-    )
+    ) + long_service_days
 
     results = calculate_pay_schedule(
         annual_salary=annual_salary,
@@ -329,19 +338,24 @@ if calculate:
             )
 
             st.write(
+                f"Long Service Days: "
+                f"{long_service_days:,.1f}"
+            )
+
+            st.write(
                 f"Accrued During Leave: "
                 f"{accrued_during_leave:,.1f} days"
-)
+            )
 
             st.write(
                 f"Accrued Since Leave Year Start: "
                 f"{available_leave['accrued_since_october']:,.1f} days"
-)
+            )
 
             st.metric(
                 "Available On Return",
                 f"{available_leave['available_on_return']:,.1f} days"
-)
+            )
 
     st.divider()
 

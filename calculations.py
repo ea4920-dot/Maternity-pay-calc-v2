@@ -220,3 +220,27 @@ def calculate_leave_available_on_return(
         "accrued_since_october": accrued_since_october,
         "available_on_return": available_on_return
     }
+
+def calculate_long_service_days(
+    employment_start_date,
+    leave_start,
+    fte=1.0
+):
+    service_years = (
+        leave_start - employment_start_date
+    ).days / 365.25
+
+    if service_years >= 20:
+        days = 5
+    elif service_years >= 15:
+        days = 4
+    elif service_years >= 10:
+        days = 3
+    elif service_years >= 7:
+        days = 2
+    elif service_years >= 5:
+        days = 1
+    else:
+        days = 0
+
+    return round(days * fte, 1)
