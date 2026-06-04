@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-from constants import SMP_RATE
+SMP_RATE = 187.18
 
 
 def weekly_salary(annual_salary, fte=1.0):
@@ -12,18 +12,12 @@ def calculate_return_date(leave_start):
 
 
 def calculate_pay_schedule(annual_salary, fte=1.0):
-    weekly_pay = weekly_salary(
-        annual_salary,
-        fte
-    )
+    weekly_pay = weekly_salary(annual_salary, fte)
 
     full_pay_total = weekly_pay * 26
     smp_total = SMP_RATE * 13
 
-    total_pay = (
-        full_pay_total +
-        smp_total
-    )
+    total_pay = full_pay_total + smp_total
 
     return {
         "weekly_salary": round(weekly_pay, 2),
@@ -34,21 +28,13 @@ def calculate_pay_schedule(annual_salary, fte=1.0):
 
 
 def calculate_qualifying_week(due_date):
-    days_since_sunday = (
-        due_date.weekday() + 1
-    ) % 7
+    days_since_sunday = (due_date.weekday() + 1) % 7
 
-    ewc_start = due_date - timedelta(
-        days=days_since_sunday
-    )
+    ewc_start = due_date - timedelta(days=days_since_sunday)
 
-    qualifying_start = ewc_start - timedelta(
-        weeks=15
-    )
+    qualifying_start = ewc_start - timedelta(weeks=15)
 
-    qualifying_end = qualifying_start + timedelta(
-        days=6
-    )
+    qualifying_end = qualifying_start + timedelta(days=6)
 
     return {
         "ewc_start": ewc_start,
@@ -57,17 +43,13 @@ def calculate_qualifying_week(due_date):
     }
 
 
-def qualifies_for_smp(
-    employment_start_date,
-    due_date
-):
-    qualifying = calculate_qualifying_week(
-        due_date
-    )
+def qualifies_for_smp(employment_start_date, due_date):
+
+    qualifying = calculate_qualifying_week(due_date)
 
     service_days = (
-        qualifying["qualifying_end"]
-        - employment_start_date
+        qualifying["qualifying_end"] -
+        employment_start_date
     ).days
 
     service_weeks = service_days / 7
@@ -80,6 +62,7 @@ def qualifies_for_oxford_scheme(
     due_date,
     intends_to_return
 ):
+
     if employment_start_date > due_date:
         return False
 
@@ -88,41 +71,18 @@ def qualifies_for_oxford_scheme(
 
     return True
 
+def calculate_maternity_timeline(leave_start):
 
-def calculate_maternity_timeline(
-    leave_start
-):
-    full_pay_end = (
-        leave_start +
-        timedelta(weeks=26) -
-        timedelta(days=1)
-    )
+    full_pay_end = leave_start + timedelta(weeks=26) - timedelta(days=1)
 
-    smp_start = (
-        full_pay_end +
-        timedelta(days=1)
-    )
+    smp_start = full_pay_end + timedelta(days=1)
+    smp_end = smp_start + timedelta(weeks=13) - timedelta(days=1)
 
-    smp_end = (
-        smp_start +
-        timedelta(weeks=13) -
-        timedelta(days=1)
-    )
+    unpaid_start = smp_end + timedelta(days=1)
 
-    unpaid_start = (
-        smp_end +
-        timedelta(days=1)
-    )
+    return_date = leave_start + timedelta(weeks=52)
 
-    return_date = (
-        leave_start +
-        timedelta(weeks=52)
-    )
-
-    unpaid_end = (
-        return_date -
-        timedelta(days=1)
-    )
+    unpaid_end = return_date - timedelta(days=1)
 
     return {
         "full_pay_start": leave_start,
